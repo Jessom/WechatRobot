@@ -1,0 +1,29 @@
+{
+  "name": "wechatrobot",
+  "version": "1.0.0",
+  "description": "wechat robot",
+  "main": "app.js",
+  "scripts": {
+    "test": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Jessom/WechatRobot.git"
+  },
+  "keywords": [
+    "robot"
+  ],
+  "author": "watasi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jessom/WechatRobot/issues"
+  },
+  "homepage": "https://github.com/Jessom/WechatRobot#readme",
+  "devDependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "node-schedule": "^1.3.2",
+    "qrcode-terminal": "^0.12.0",
+    "superagent": "^5.0.8",
+    "wechaty": "^0.26.1"
+  }
+}
