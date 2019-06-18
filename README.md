@@ -22,7 +22,7 @@ module.exports = {
   NAME: 'わたし', // 备注
   PROVINCE: 'jiangsu',  // 省
   CITY: 'suzhou', // 城市
-  SENDDATE: '0 0 14 * * *',  // 每天8点定时发送
+  SENDDATE: '0 0 8 * * *',  // 定时发送
   MOJIHOST: 'https://tianqi.moji.com/weather/china',  // 墨迹天气
   BILIBILI: 'https://www.bilibili.com/guochuang/timeline/', // 哔哩哔哩新番时间表
 
@@ -55,10 +55,10 @@ yum install pango.x86_64 libXcomposite.x86_64 libXcursor.x86_64 libXdamage.x86_6
 yum install ipa-gothic-fonts xorg-x11-fonts-100dpi xorg-x11-fonts-75dpi xorg-x11-utils xorg-x11-fonts-cyrillic xorg-x11-fonts-Type1 xorg-x11-fonts-misc -y
 ```
 
-## 关于哔哩哔哩
-刚开始使用`superagent`去爬`哔哩哔哩今日新番`，折腾了几分钟，都拿不到想要的数据。<br>
-看了看B站，发现用`ajax`请求不到页面数据，转而使用了`puppeteer`。
+## 关于爬虫
+- 哔哩哔哩是用`puppeteer`爬的
+- 墨迹天气是用`superagent`爬的(涉及到请求的，都是用的`superagent`)
 
 ## 问题处理
-2017年6月下旬开始，使用web版微信存在大概率被现在登录的可能性，仅仅是`web版微信`，不影响其他平台(手机、PC客户端等)。<br>
+2017年6月下旬开始，使用web版微信存在大概率被限制登录的可能性，仅仅是`web版微信`，不影响其他平台(手机、PC客户端等)。<br>
 验证是否被限制登录，[微信官网](https://wx.qq.com)扫码查看能否登录即可

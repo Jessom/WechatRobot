@@ -99,6 +99,7 @@ async function tcRobot(word) {
     if (content.ret === 0) {
       return content.data.answer
     } else {
+      logger.warn(content)
       return '我好像迷失在无边的网络中了，你能找回我么'
     }
   } catch (error) {
