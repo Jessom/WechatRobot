@@ -5,6 +5,10 @@
 - [x] 自动添加好友
 - [x] 自动回复
   - 群聊不支持自动回复
+  - 不支持语音
+  - 不支持表情
+  - 不支持多媒体
+  - **仅支持文本**
 - [x] 自动拉群
   - 回复`进群`关键字，即可拉进`罪世界`群
 
@@ -36,12 +40,26 @@ module.exports = {
 }
 ```
 
+## 部署
+Centos7下安装`puppeteer`不成功，[参考这里](https://segmentfault.com/a/1190000011382062)
+```bash
+#依赖库
+yum install pango.x86_64 libXcomposite.x86_64 libXcursor.x86_64 libXdamage.x86_64 libXext.x86_64 libXi.x86_64 libXtst.x86_64 cups-libs.x86_64 libXScrnSaver.x86_64 libXrandr.x86_64 GConf2.x86_64 alsa-lib.x86_64 atk.x86_64 gtk3.x86_64 -y
+
+#字体
+yum install ipa-gothic-fonts xorg-x11-fonts-100dpi xorg-x11-fonts-75dpi xorg-x11-utils xorg-x11-fonts-cyrillic xorg-x11-fonts-Type1 xorg-x11-fonts-misc -y
+```
+
 ## 关于哔哩哔哩
 刚开始使用`superagent`去爬`哔哩哔哩今日新番`，折腾了几分钟，都拿不到想要的数据。<br>
 看了看B站，发现用`ajax`请求不到页面数据，转而使用了`puppeteer`。
 
 ## bug
 - 多人同时和机器人聊天，会导致程序崩掉(所以自动聊天默认关闭)
+
+## 问题处理
+2017年6月下旬开始，使用web版微信存在大概率被现在登录的可能性，仅仅是`web版微信`，不影响其他平台(手机、PC客户端等)。<br>
+验证是否被限制登录，[微信官网](https://wx.qq.com)扫码查看能否登录即可
 
 ## 最后
 可以扫码添加好友进行测试，好友验证填写`罪世界`才可以自动添加好友<br>

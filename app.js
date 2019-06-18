@@ -3,7 +3,9 @@ const { filterTime } = require('./untils')
 const {
   getBilibili,
   getWether,
-  getReplay
+  getReplay,
+  tcRobot,
+  tcTrans
 } = require('./crawler')
 const config = require('./config')
 const schedule = require('node-schedule')
@@ -116,7 +118,9 @@ async function onMessage(msg) {
         console.log("过滤");
         return
       }
-      let reply = await getReplay(content)
+      // let reply = await getReplay(content) // 天性机器人
+      let reply = await tcRobot(content) // 腾讯闲聊
+      // let reply = await tcTrans(content)  // 腾讯翻译
       try {
         await contact.say(reply)
       } catch (error) {

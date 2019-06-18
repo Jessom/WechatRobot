@@ -1,4 +1,8 @@
-const { request } = require('../untils')
+const {
+  request,
+  delay,
+  getReqSign
+} = require('../untils')
 const config = require('../config')
 const cheerio = require('cheerio')
 const puppeteer = require('puppeteer')
@@ -62,6 +66,7 @@ async function getWether() {
 // 图灵机器人
 async function getReplay(word) {
   try {
+    // await delay(2000) // 延迟两秒，防止多次请求
     let res = await request(config.AIBOTAPI, 'GET', { key: config.APIKEY, question: word })
     let content = JSON.parse(res.text)
     if (content.code === 200) {
@@ -74,8 +79,53 @@ async function getReplay(word) {
   }
 }
 
+// 腾讯闲聊机器人
+async function tcRobot(word) {
+  let params = getReqSign({
+    session: '10000',
+    'question': word
+  })
+  try {
+    let res = await request(config.TCURL, 'GET', params)
+    let content = JSON.parse(res.text)
+    console.log("闲聊机器人响应 ====> ", content)
+    if (content.ret === 0) {
+      return content.data.answer
+    } else {
+      return '我好像迷失在无边的网络中了，你能找回我么'
+    }
+  } catch (error) {
+    console.log("请求失败", error)
+    return '我好像迷失在无边的网络中了，你能找回我么'
+  }
+}
+
+// 翻译
+async function tcTrans(word) {
+  let params = getReqSign({
+    type: "0",
+    text: word
+  })
+  console.log(params)
+  // params['type'] = Number(params['type'])
+  try {
+    let res = await request('https://api.ai.qq.com/fcgi-bin/nlp/nlp_texttrans', 'GET', params)
+    let content = JSON.parse(res.text)
+    console.log(content)
+    if(content.ret == 0) {
+      return content.data.trans_text
+    } else {
+      return '翻译错误'
+    }
+  } catch (error) {
+    return '翻译错误'
+  }
+}
+
 module.exports = {
   getBilibili,
   getWether,
-  getReplay
+  getReplay,
+  tcRobot,
+  tcTrans
 }

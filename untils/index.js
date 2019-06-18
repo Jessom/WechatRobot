@@ -1,4 +1,6 @@
 const superagent = require('superagent')
+const config = require('../config')
+const md5 = require('md5')
 
 /**
  * 请求
@@ -63,8 +65,63 @@ function delay(ms) {
 	})
 }
 
+function jsonSort(jsonObj) {
+	let arr=[]
+	for(var key in jsonObj){
+		arr.push(key)
+	}
+	arr.sort()
+	let str=''
+	for(let i in arr){
+		if(jsonObj[arr[i]]) {
+			str += `${arr[i]}=${encodeURIComponent(jsonObj[arr[i]])}&`
+		}
+	}
+	return str
+}
+
+/**
+ * 随机字符串
+ */
+function getNoncestr() {
+	return Math.random().toString(36).substr(2)
+}
+
+/**
+ * 时间戳(秒级)
+ */
+function getTimestamp() {
+	return parseInt(Date.now() / 1000)
+}
+
+function getSign(params, key) {
+	let str = ""
+	str = jsonSort(params)
+
+	str += `app_key=${key}`
+	return md5(str).toLocaleUpperCase()
+}
+
+function getReqSign(options) {
+	let nonce_str = getNoncestr()
+  let time_stamp = getTimestamp()
+  let params = Object.assign({
+		'app_id': config.TCAPPID,
+		'time_stamp': time_stamp.toString(),
+		'nonce_str': nonce_str.toString(),
+		'sign': ''
+	}, options)
+	params['sign'] = getSign(params, config.TCAPPKEY)
+	
+	return params
+}
+
 module.exports = {
   request,
 	filterTime,
-	delay
+	delay,
+	getNoncestr,
+	getTimestamp,
+	getSign,
+	getReqSign
 }
