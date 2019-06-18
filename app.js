@@ -9,6 +9,7 @@ const {
 } = require('./crawler')
 const config = require('./config')
 const schedule = require('node-schedule')
+const logger = require('./untils/logger')
 
 const wechat = new Wechaty({ name: 'WatasiWechat' })
 
@@ -27,17 +28,14 @@ function onScan(qrcode, status) {
 
 // 登录
 function onLogin(user) {
-  console.log(`${user}登录成功`)
+  logger.info(`${user}登录成功`)
 
-  schedule.scheduleJob(config.SENDDATE, function() {
-    
-    main()
-  })
+  main()
 }
 
 // 退出
 function onLogout(user) {
-  console.log(`${user}退出`)
+  logger.info(`${user}退出`)
 }
 
 // 自动加好友
@@ -48,35 +46,38 @@ async function onFriendShip(friendship) {
 
       // 打招呼中带有自动加好友关键字，并且开启了自动加好友功能
       if(addFriendReg.test(friendship.hello()) && config.AUTOADDFRIEND) {
-        console.log("自动添加好友")
         const contact = friendship.contact()
         let result = await friendship.accept()
         if(result) {
-          console.log(`Request from ${contact.name()} is accept succesfully!`)
+          logger.warn(`${contact.name()} === 已经是你的好友了`)
         } else {
-          console.log(`Request from ${contact.name()} failed to accept!`)
+          logger.info(`${contact.name()} === 添加成功，是否开启进去功能: ${config.AUTOADDROOM}`)
 
           if(config.AUTOADDROOM) {  // 进群
             let targetRoom = await this.Room.find({ topic: eval(config.ROOMNAME) })
             if(targetRoom) {
               try {
                 let hasInRoom = await targetRoom.has(contact)
-                if(hasInRoom) return
+                if(hasInRoom) {
+                  logger.warn(`${contact.name()} === 已是群员`)
+                  return
+                }
                 await targetRoom.add(contact)
+                logger.info(`${contact.name()} === 进群成功`)
               } catch (error) {
-                console.log("加群出错==>", error)
+                lotter.error("自动加群出错 ==> ", error)
               }
             }
           }
         }
       } else {
-        console.log("加好验证未通过=>", friendship.hello())
+        logger.warn('好友请求为验证，请求语是 ==> ', friendship.hello())
       }
     } else if(friendship.type() === Friendship.Type.Confirm) { // confirm friendship
-      console.log(`new friendship confirmed with ${friendship.contact().name()}`)
+      logger.warn(`new friendship confirmed with ${friendship.contact().name()}`)
     }
   } catch (error) {
-    console.log("加好友出错啦==> ", error)
+    logger.error("加好友出错 ==> ", error)
   }
 }
 
@@ -86,7 +87,7 @@ async function roomJoin(room, inviteeList, inviter) {
   let res = await room.topic()
   const roomNameReg = eval(config.ROOMNAME)
   if(roomNameReg.test(res)) {
-    console.log(`群名: ${res}, 新成员: ${nameList}, 邀请人: ${inviter}`)
+    logger.info(`群名: ${res}, 新成员: ${nameList}, 邀请人: ${inviter}`)
     room.say(`欢迎新朋友 ${nameList} 様 👏👏👏`)
   }
 }
@@ -100,9 +101,10 @@ async function onMessage(msg) {
   if(msg.self()) return
 
   if(room) {
-    console.log("群聊")
+    logger.info("群聊")
   } else if(contact.type() === Contact.Type.Personal) {
     if(config.AUTOADDROOM && eval(config.ADDROOMWORD).test(content)) {  // 进群
+      logger.info('发起进群请求')
       let targetRoom = await this.Room.find({ topic: eval(config.ROOMNAME) })
       if(targetRoom) {
         try {
@@ -110,12 +112,12 @@ async function onMessage(msg) {
           if(hasInRoom) return
           await targetRoom.add(contact)
         } catch (error) {
-          console.log("加群出错==>", error)
+          logger.error("申请加群出错 ==> ", error)
         }
       }
     } else if(config.AUTOREPLY) {  // 自动聊天
       if(eval(config.EXCLUDE).test(content)) {
-        console.log("过滤");
+        logger.info("过滤")
         return
       }
       // let reply = await getReplay(content) // 天性机器人
@@ -124,25 +126,30 @@ async function onMessage(msg) {
       try {
         await contact.say(reply)
       } catch (error) {
-        console.log("自动聊天出错了==> ", error)
+        logger.error("自动聊天出错了 ==> ", error)
       }
     }
   }
 }
 
 // 执行爬虫，获取今日发送内容
-async function main() {
-  let msg = filterTime(Date.now(), 'yyyy-MM-dd hh:mm') + '<br>'
-  let contact = await wechat.Contact.find({ alias: config.NAME }) || await wechat.Contact.find({ name: config.NICKNAME }) // 获取你要发送的联系人
-  msg += await getWether()
-  msg += '<br>'
-  msg += await getBilibili()
-
-  try {
-    await contact.say(msg)
-  } catch (error) {
-    console.log("爬虫出错了===> ", error.message)
-  }
+function main() {
+  schedule.scheduleJob(config.SENDDATE, async function() {
+    let time = filterTime(Date.now(), 'yyyy年MM月dd日 hh:mm')
+    logger.warn(`${new Date().getHours()}了，小爬虫开始工作了`)
+    let msg = time + '<br><br>'
+    let contact = await wechat.Contact.find({ alias: config.NAME }) || await wechat.Contact.find({ name: config.NICKNAME }) // 获取你要发送的联系人
+    msg += '【今日天气】：<br>'
+    msg += await getWether()
+    msg += '<br><br>'
+    msg += await getBilibili()
+  
+    try {
+      await contact.say(msg)
+    } catch (error) {
+      logger.error("爬虫出错了 ==> ", error.message)
+    }
+  })
 }
 
 wechat.on('scan', onScan)
@@ -153,5 +160,5 @@ wechat.on('friendship', onFriendShip)
 wechat.on('room-join', roomJoin)
 
 wechat.start()
-  .then(() => console.log("请使用微信扫一扫登录"))
-  .catch(e => console.log("出错啦---> ", e))
+  .then(() => logger.info("请使用微信扫一扫登录"))
+  .catch(e => logger.error("微信登录出错 ===> ", e))

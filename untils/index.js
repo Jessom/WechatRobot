@@ -99,6 +99,8 @@ function getSign(params, key) {
 	str = jsonSort(params)
 
 	str += `app_key=${key}`
+
+	str = str.replace(/\%20/ig, '+')
 	return md5(str).toLocaleUpperCase()
 }
 
