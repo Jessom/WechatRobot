@@ -136,7 +136,7 @@ async function onMessage(msg) {
 function main() {
   schedule.scheduleJob(config.SENDDATE, async function() {
     let time = filterTime(Date.now(), 'yyyy年MM月dd日 hh:mm')
-    logger.warn(`${new Date().getHours()}了，小爬虫开始工作了`)
+    logger.warn(`${new Date().getHours()}点了，小爬虫开始工作了`)
     let msg = time + '<br><br>'
     let contact = await wechat.Contact.find({ alias: config.NAME }) || await wechat.Contact.find({ name: config.NICKNAME }) // 获取你要发送的联系人
     msg += '【今日天气】：<br>'
