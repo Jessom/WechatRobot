@@ -12,15 +12,11 @@ const logger = require('../untils/logger')
 async function getBilibili() {
   try {
     let browser = await puppeteer.launch({
-      headless: false
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
     })
     let page = await browser.newPage()
     logger.warn("开始爬取【哔哩哔哩今日新番】")
-    await page.goto(config.BILIBILI, {
-      waitUntil: 'networkidle',
-      networkIdleTimeout: 15000,
-      timeout: 240000
-    })
+    await page.goto(config.BILIBILI)
     await page.waitFor(1000)
   
     let result = await page.evaluate(function() {
@@ -41,7 +37,7 @@ async function getBilibili() {
     logger.warn("【哔哩哔哩今日新番】爬取完成")
     return `【B站今日新番】: <br>${result.join('<br>')}`
   } catch (error) {
-    logger.error("【哔哩哔哩今日新番】爬取失败，返回自定义提示内容")
+    logger.error("【哔哩哔哩今日新番】爬取失败，返回自定义提示内容", error)
     return 'bilibili爬取失败'
     // getBilibili()
   }
