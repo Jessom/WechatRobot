@@ -39,11 +39,8 @@ async function getBilibili() {
   } catch (error) {
     logger.error("【哔哩哔哩今日新番】爬取失败，返回自定义提示内容", error)
     return 'bilibili爬取失败'
-    // getBilibili()
   }
-
 }
-
 
 // 获取今日天气
 async function getWether() {

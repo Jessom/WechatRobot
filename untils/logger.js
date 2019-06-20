@@ -10,7 +10,7 @@ log4js.configure({
 
     log_file: {
       type: 'file',
-      filename: path.resolve(__dirname, `../logs/${logName}.log`),
+      filename: path.resolve(__dirname, `../logs/${logName}`),
       maxLogSize: 20971520,
       backups: 3,
       encoding: 'utf-8'
@@ -18,19 +18,19 @@ log4js.configure({
 
     data_file: {
       type: 'dateFile',
-      filename: path.resolve(__dirname, `../logs/${logName}.log`),
+      filename: path.resolve(__dirname, `../logs/${logName}`),
       alwaysIncludePattern: true,
       daysToKeep: 15,
-      pattern: '-yyyy-MM-dd-hh.log',
+      pattern: '-yyyy-MM-dd.log',
       encoding: 'utf-8'
     },
 
     error_file: {
       type: 'dateFile',
-      filename: path.resolve(__dirname, `../logs/${logName}_error.log`),
+      filename: path.resolve(__dirname, `../logs/${logName}_error`),
       alwaysIncludePattern: true,
       daysToKeep: 15,
-      pattern: '_yyyy-MM-dd-hh.log',
+      pattern: '-yyyy-MM-dd.log',
       encoding: 'utf-8'
     }
   },
@@ -63,4 +63,4 @@ log4js.configure({
   }
 })
 
-module.exports = log4js.getLogger('default')
+module.exports = log4js.getLogger('production')
