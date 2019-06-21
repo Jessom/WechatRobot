@@ -46,7 +46,7 @@ log4js.configure({
       level: 'warn'
     },
 
-    console: {
+    development: {
       appenders: ['console'],
       level: 'debug'
     },
@@ -63,4 +63,4 @@ log4js.configure({
   }
 })
 
-module.exports = log4js.getLogger('production')
+module.exports = log4js.getLogger(process.env.NODE_ENV || "production")

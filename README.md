@@ -55,6 +55,13 @@ yum install pango.x86_64 libXcomposite.x86_64 libXcursor.x86_64 libXdamage.x86_6
 yum install ipa-gothic-fonts xorg-x11-fonts-100dpi xorg-x11-fonts-75dpi xorg-x11-utils xorg-x11-fonts-cyrillic xorg-x11-fonts-Type1 xorg-x11-fonts-misc -y
 ```
 
+## build step
+```bash
+npm run start # 使用pm2启动项目，并设置环境为 production
+
+npm run dev # 将环境设置为 development，并执行 node app.js
+```
+
 ## 关于爬虫
 - 哔哩哔哩是用`puppeteer`爬的
 - 墨迹天气是用`superagent`爬的(涉及到请求的，都是用的`superagent`)

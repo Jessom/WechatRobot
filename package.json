@@ -4,6 +4,8 @@
   "description": "wechat robot",
   "main": "app.js",
   "scripts": {
+    "start": "export NODE_ENV='production' && pm2 start app.js --name='robot'",
+    "dev": "export NODE_ENV='development' && node app.js",
     "test": "nodemon app.js"
   },
   "repository": {

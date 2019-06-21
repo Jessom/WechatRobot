@@ -17,7 +17,8 @@ async function getBilibili() {
     let page = await browser.newPage()
     logger.warn("开始爬取【哔哩哔哩今日新番】")
     await page.goto(config.BILIBILI)
-    await page.waitFor(1000)
+    // await page.waitFor(1000)
+    await delay(2000)
   
     let result = await page.evaluate(function() {
       let arr = []
