@@ -141,8 +141,8 @@ function main() {
     let contact = await wechat.Contact.find({ alias: config.NAME }) || await wechat.Contact.find({ name: config.NICKNAME }) // 获取你要发送的联系人
     msg += '【今日天气】：<br>'
     msg += await getWether()
-    msg += '<br><br>'
-    msg += await getBilibili()
+    // msg += '<br><br>'
+    // msg += await getBilibili()
   
     try {
       await contact.say(msg)
