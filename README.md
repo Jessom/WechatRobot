@@ -63,8 +63,9 @@ npm run dev # 将环境设置为 development，并执行 node app.js
 ```
 
 ## 关于爬虫
-- 哔哩哔哩是用`puppeteer`爬的
+- ~~哔哩哔哩是用`puppeteer`爬的~~
 - 墨迹天气是用`superagent`爬的(涉及到请求的，都是用的`superagent`)
+起初哔哩哔哩是用`puppeteer`爬的，但是在服务端一直报超时，后来改用`superagent`请求接口获取更新信息
 
 ## 问题处理
 2017年6月下旬开始，使用web版微信存在大概率被限制登录的可能性，仅仅是`web版微信`，不影响其他平台(手机、PC客户端等)。<br>

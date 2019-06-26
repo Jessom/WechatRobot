@@ -10,7 +10,29 @@ const logger = require('../untils/logger')
 
 // 获取哔哩哔哩今日新番
 async function getBilibili() {
+
+  const url = `https://bangumi.bilibili.com/web_api/timeline_global`
+  let result = ""
   try {
+    logger.warn("开始爬取【哔哩哔哩今日新番】")
+    let res = await request(url, 'GET')
+    let results = res.body.result
+
+    results.forEach(c => {
+      if(c.is_today) {
+        c.seasons.forEach(child => {
+          result += `${child.title} ${child.pub_time}<br>`
+        })
+      }
+    })
+    logger.warn("【哔哩哔哩今日新番】爬取完成")
+    return `【B站今日新番】: <br>${result.join('<br>')}`
+  } catch (error) {
+    logger.error("哔哩哔哩爬取失败 ==>", error)
+    return "哔哩哔哩爬取失败"
+  }
+
+  /* try {
     let browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     })
@@ -40,7 +62,7 @@ async function getBilibili() {
   } catch (error) {
     logger.error("【哔哩哔哩今日新番】爬取失败，返回自定义提示内容", error)
     return 'bilibili爬取失败'
-  }
+  } */
 }
 
 // 获取今日天气
