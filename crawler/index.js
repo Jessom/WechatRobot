@@ -26,7 +26,7 @@ async function getBilibili() {
       }
     })
     logger.warn("【哔哩哔哩今日新番】爬取完成")
-    return `【B站今日新番】: <br>${result.join('<br>')}`
+    return `【B站今日新番】: <br>${result}`
   } catch (error) {
     logger.error("哔哩哔哩爬取失败 ==>", error)
     return "哔哩哔哩爬取失败"
