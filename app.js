@@ -33,7 +33,7 @@ function onLogin(user) {
   main()
 
   // 没小时的 45 秒，发送防退登消息
-  schedule.scheduleJob('0 45 * * * *', () => {
+  schedule.scheduleJob('0 45 * * * *', async () => {
     let contact = await wechat.Contact.find({ alias: config.RNAME }) || await wechat.Contact.find({ name: config.RNAME }) // 获取你要发送的联系人
     
     try {
